@@ -64,7 +64,7 @@ func addEntities(args []string) {
 	fmt.Printf("Added entity %s with %d health and an initiative of %d\n", name, health, initiative)
 }
 
-func damageEntity(args []string) {
+func damageEntity(args []string, scanner *bufio.Scanner) {
 	if len(args) != 3 {
 		fmt.Println("Invalid Number of Arguments. To use damage [name] [amount]")
 		return
@@ -80,14 +80,27 @@ func damageEntity(args []string) {
 	for i, entity := range encounter {
 		if strings.EqualFold(entity.Name, name) {
 			encounter[i].Health -= damage
-			fmt.Printf("%d damage dealt to %s, new health is %d\n", damage, entity.Name, encounter[i].Health)
+			fmt.Printf("%d damage dealt to %s, new health is %d\n", damage, name, encounter[i].Health)
+
+			if encounter[i].Health <= 0 {
+				fmt.Printf("%s health is equal to or below zero, would you like to remove them? (y/n) ", name)
+				if scanner.Scan() {
+					answer := cleanInput(scanner.Text())
+					fmt.Printf("\n")
+
+					if strings.EqualFold(answer, "y") || strings.EqualFold(answer, "yes") {
+						encounter = append(encounter[:i], encounter[i+1:]...)
+						fmt.Printf("removed %s\n", name)
+					}
+				}
+			}
 			return
 		}
 	}
 	fmt.Println("No entity found with name: " + name)
 }
 
-func listEncouter() {
+func listEntities() {
 	if len(encounter) == 0 {
 		fmt.Println("No entities in the current encounter")
 	}
@@ -104,12 +117,12 @@ func cleanInput(input string) string {
 }
 
 func main() {
-	reader := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("D&D Encounter Tracker Started. Type 'exit' to quit")
 	printPrompt()
 
-	for reader.Scan() {
-		input := cleanInput(reader.Text())
+	for scanner.Scan() {
+		input := cleanInput(scanner.Text())
 		args := strings.Split(input, " ")
 		command := args[0]
 
@@ -119,11 +132,11 @@ func main() {
 		case "exit":
 			return
 		case "list":
-			listEncouter()
+			listEntities()
 		case "add":
 			addEntities(args)
 		case "damage":
-			damageEntity(args)
+			damageEntity(args, scanner)
 		default:
 			invalidCommand()
 		}
