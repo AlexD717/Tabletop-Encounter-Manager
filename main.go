@@ -31,7 +31,7 @@ func helpCommand() {
 
 func addEntities(args []string) {
 	if len(args) != 4 {
-		fmt.Println("Invalid Number of Arguments. Usage add [name] [health] [initiative]")
+		fmt.Println("Invalid Number of Arguments. To use add [name] [health] [initiative]")
 		return
 	}
 
@@ -61,7 +61,40 @@ func addEntities(args []string) {
 		Initiative: initiative,
 	}
 	encounter = append(encounter, newEntity)
-	fmt.Printf("Added entity %s with %d health and an initiative of %v\n", name, health, initiative)
+	fmt.Printf("Added entity %s with %d health and an initiative of %d\n", name, health, initiative)
+}
+
+func damageEntity(args []string) {
+	if len(args) != 3 {
+		fmt.Println("Invalid Number of Arguments. To use damage [name] [amount]")
+		return
+	}
+
+	damage, err := strconv.Atoi(args[2])
+	if err != nil {
+		fmt.Println("Error: Damage must be a number")
+		return
+	}
+
+	name := args[1]
+	for i, entity := range encounter {
+		if strings.EqualFold(entity.Name, name) {
+			encounter[i].Health -= damage
+			fmt.Printf("%d damage dealt to %s, new health is %d\n", damage, entity.Name, encounter[i].Health)
+			return
+		}
+	}
+	fmt.Println("No entity found with name: " + name)
+}
+
+func listEncouter() {
+	if len(encounter) == 0 {
+		fmt.Println("No entities in the current encounter")
+	}
+
+	for _, entity := range encounter {
+		fmt.Printf("Entity %s, %d health, %d initiative\n", entity.Name, entity.Health, entity.Initiative)
+	}
 }
 
 func cleanInput(input string) string {
@@ -85,8 +118,12 @@ func main() {
 			helpCommand()
 		case "exit":
 			return
+		case "list":
+			listEncouter()
 		case "add":
 			addEntities(args)
+		case "damage":
+			damageEntity(args)
 		default:
 			invalidCommand()
 		}
