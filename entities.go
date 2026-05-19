@@ -13,30 +13,30 @@ type Entities struct {
 	Initiative int
 }
 
-func addEntities(args []string) {
+func addEntities(args []string, encounter []Entities) []Entities {
 	if len(args) != 4 {
 		fmt.Println("Invalid Number of Arguments. To use add [name] [health] [initiative]")
-		return
+		return encounter
 	}
 
 	name := args[1]
 	for _, entity := range encounter {
 		if strings.EqualFold(entity.Name, name) {
 			fmt.Printf("Error: There is already an entity with the name %s in the encounter\n", entity.Name)
-			return
+			return encounter
 		}
 	}
 
 	health, err := strconv.Atoi(args[2])
 	if err != nil {
 		fmt.Println("Error: Health must be a number")
-		return
+		return encounter
 	}
 
 	initiative, err := strconv.Atoi(args[3])
 	if err != nil {
 		fmt.Println("Error: Initiative must be a number ")
-		return
+		return encounter
 	}
 
 	newEntity := Entities{
@@ -46,18 +46,19 @@ func addEntities(args []string) {
 	}
 	encounter = append(encounter, newEntity)
 	fmt.Printf("Added entity %s with %d health and an initiative of %d\n", name, health, initiative)
+	return encounter
 }
 
-func damageEntity(args []string, scanner *bufio.Scanner) {
+func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities) []Entities {
 	if len(args) != 3 {
 		fmt.Println("Invalid Number of Arguments. To use damage [name] [amount]")
-		return
+		return encounter
 	}
 
 	damage, err := strconv.Atoi(args[2])
 	if err != nil {
 		fmt.Println("Error: Damage must be a number")
-		return
+		return encounter
 	}
 
 	name := args[1]
@@ -78,13 +79,14 @@ func damageEntity(args []string, scanner *bufio.Scanner) {
 					}
 				}
 			}
-			return
+			return encounter
 		}
 	}
 	fmt.Println("No entity found with name: " + name)
+	return encounter
 }
 
-func listEntities() {
+func listEntities(encounter []Entities) {
 	if len(encounter) == 0 {
 		fmt.Println("No entities in the current encounter")
 	}

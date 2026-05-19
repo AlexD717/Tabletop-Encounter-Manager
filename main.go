@@ -8,10 +8,10 @@ import (
 )
 
 var cliName string = "D&D"
-var encounter []Entities
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	var encounter []Entities
 	fmt.Println("D&D Encounter Tracker Started. Type 'exit' to quit")
 	printPrompt()
 
@@ -26,11 +26,11 @@ func main() {
 		case "exit":
 			return
 		case "list":
-			listEntities()
+			listEntities(encounter)
 		case "add":
-			addEntities(args)
+			encounter = addEntities(args, encounter)
 		case "damage":
-			damageEntity(args, scanner)
+			encounter = damageEntity(args, scanner, encounter)
 		default:
 			invalidCommand()
 		}
