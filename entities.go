@@ -86,12 +86,16 @@ func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities) [
 	return encounter
 }
 
-func listEntities(encounter []Entities) {
+func listEntities(encounter []Entities) string {
 	if len(encounter) == 0 {
-		fmt.Println("No entities in the current encounter")
+		return "No entities in the current encounter"
 	}
 
+	var builder strings.Builder
 	for _, entity := range encounter {
-		fmt.Printf("Entity %s, %d health, %d initiative\n", entity.Name, entity.Health, entity.Initiative)
+		line := fmt.Sprintf("Entity %s, %d health, %d initiative\n", entity.Name, entity.Health, entity.Initiative)
+		builder.WriteString(line)
 	}
+
+	return builder.String()
 }

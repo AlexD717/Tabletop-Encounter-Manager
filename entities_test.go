@@ -1,8 +1,11 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
-func FullOneEntityTest(t *testing.T) {
+func TestOneFullEntity(t *testing.T) {
 	t.Parallel()
 
 	emptyEncounter := []Entities{}
@@ -27,7 +30,7 @@ func FullOneEntityTest(t *testing.T) {
 	}
 }
 
-func EntityAddedTest(t *testing.T) {
+func TestAddEntity(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -82,7 +85,7 @@ func EntityAddedTest(t *testing.T) {
 			"Object already in",
 			[]Entities{{Name: "goblin", Health: 10, Initiative: 5}},
 			[]string{"add", "troll", "42", "6"},
-			1,
+			2,
 		},
 	}
 
@@ -94,6 +97,37 @@ func EntityAddedTest(t *testing.T) {
 
 			if len(result) != tt.expectedLength {
 				t.Errorf("Expected encounter length %d, got %d", tt.expectedLength, len(result))
+			}
+		})
+	}
+}
+
+func TestListEntities(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name            string
+		encounter       []Entities
+		expectedStrings []string
+	}{
+		{
+			"Empty Encounter",
+			[]Entities{},
+			[]string{"no entities"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := listEntities(tt.encounter)
+			lowerResult := strings.ToLower(result)
+
+			for _, expected := range tt.expectedStrings {
+				if !strings.Contains(lowerResult, expected) {
+					t.Errorf("Expected result to contain '%s', but it did not. Result was: %s", expected, result)
+				}
 			}
 		})
 	}

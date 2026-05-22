@@ -26,7 +26,7 @@ func main() {
 		case "exit":
 			return
 		case "list":
-			listEntities(encounter)
+			fmt.Print(listEntities(encounter))
 		case "add":
 			encounter = addEntities(args, encounter)
 		case "damage":
