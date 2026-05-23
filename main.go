@@ -12,6 +12,8 @@ var cliName string = "D&D"
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var encounter []Entities
+	gameStarted := false
+	currentTurn := 0
 	fmt.Println("D&D Encounter Tracker Started. Type 'exit' to quit")
 	printPrompt()
 
@@ -27,10 +29,15 @@ func main() {
 			return
 		case "list":
 			fmt.Print(listEntities(encounter))
+		case "current":
+			currentEntityTurn(encounter, currentTurn)
+		case "next":
+			currentTurn = nextTurn(encounter, currentTurn)
+			gameStarted = true
 		case "add":
-			encounter = addEntities(args, encounter)
+			encounter, currentTurn = addEntities(args, encounter, currentTurn, gameStarted)
 		case "damage":
-			encounter = damageEntity(args, scanner, encounter)
+			encounter, currentTurn = damageEntity(args, scanner, encounter, currentTurn)
 		default:
 			invalidCommand()
 		}
