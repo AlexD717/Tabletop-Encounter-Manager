@@ -7,6 +7,47 @@ import (
 	"testing"
 )
 
+func TestNextEntity(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name         string
+		encounter    []Entities
+		currentTurn  int
+		expectedTurn int
+	}{
+		{
+			"No Entities in Encounter",
+			[]Entities{},
+			0,
+			0,
+		},
+		{
+			"Next Turn",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}, {Name: "dragon", Health: 50, Initiative: 5}},
+			1,
+			2,
+		},
+		{
+			"Loop Around",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}, {Name: "dragon", Health: 50, Initiative: 5}},
+			2,
+			0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			resultingTurn := nextTurn(tt.encounter, tt.currentTurn)
+			if resultingTurn != tt.expectedTurn {
+				t.Errorf("Expected current turn to be %d, got %d", tt.expectedTurn, resultingTurn)
+			}
+		})
+	}
+}
+
 func TestOneFullEntity(t *testing.T) {
 	t.Parallel()
 

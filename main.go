@@ -25,7 +25,7 @@ func main() {
 	gameStarted := false
 	currentTurn := 0
 	fmt.Println(StylePrompt.Render(encounterLogo))
-	fmt.Println("Tabletop Encounter Manager Started. Type 'exit' to quit")
+	fmt.Println("Tabletop Encounter Manager Started. Type 'exit' to quit or 'help' to get started")
 	printPrompt()
 
 	for scanner.Scan() {
