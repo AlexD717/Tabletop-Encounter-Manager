@@ -24,7 +24,11 @@ func sortEntities(encounter []Entities) []Entities {
 
 func currentEntityTurn(encounter []Entities, currentTurn int) {
 	if len(encounter) > 0 {
-		fmt.Printf("It is currently %s's turn, and they have %d health\n", encounter[currentTurn].Name, encounter[currentTurn].Health)
+		entityString := fmt.Sprintf("%s's", encounter[currentTurn].Name)
+		coloredName := StyleEntity.Render(entityString)
+		coloredHealth := StyleHealth.Render(fmt.Sprintf("%d", encounter[currentTurn].Health))
+
+		fmt.Printf("It is currently %s turn, and they have %s health\n", coloredName, coloredHealth)
 	} else {
 		fmt.Println("There are no entities in the encounter")
 	}
@@ -38,27 +42,27 @@ func nextTurn(encounter []Entities, currentTurn int) int {
 
 func addEntities(args []string, encounter []Entities, currentTurn int, gameStarted bool) ([]Entities, int) {
 	if len(args) != 4 {
-		fmt.Println("Invalid Number of Arguments. To use add [name] [health] [initiative]")
+		printError("Invalid Number of Arguments. To use add [name] [health] [initiative]")
 		return encounter, currentTurn
 	}
 
 	name := args[1]
 	for _, entity := range encounter {
 		if strings.EqualFold(entity.Name, name) {
-			fmt.Printf("Error: There is already an entity with the name %s in the encounter\n", entity.Name)
+			printError("Error: There is already an entity with the name %s in the encounter", entity.Name)
 			return encounter, currentTurn
 		}
 	}
 
 	health, err := strconv.Atoi(args[2])
 	if err != nil {
-		fmt.Println("Error: Health must be a number")
+		printError("Error: Health must be a number")
 		return encounter, currentTurn
 	}
 
 	initiative, err := strconv.Atoi(args[3])
 	if err != nil {
-		fmt.Println("Error: Initiative must be a number ")
+		printError("Error: Initiative must be a number ")
 		return encounter, currentTurn
 	}
 
@@ -84,19 +88,23 @@ func addEntities(args []string, encounter []Entities, currentTurn int, gameStart
 		}
 	}
 
-	fmt.Printf("Added entity %s with %d health and an initiative of %d\n", name, health, initiative)
+	coloredName := StyleEntity.Render(name)
+	coloredHealth := StyleHealth.Render(fmt.Sprintf("%d", health))
+	coloredInitiative := StyleInitiative.Render(fmt.Sprintf("%d", initiative))
+
+	fmt.Printf("Added entity %s with %s health and an initiative of %s\n", coloredName, coloredHealth, coloredInitiative)
 	return encounter, currentTurn
 }
 
 func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities, currentTurn int) ([]Entities, int) {
 	if len(args) != 3 {
-		fmt.Println("Invalid Number of Arguments. To use damage [name] [amount]")
+		printError("Invalid Number of Arguments. To use damage [name] [amount]")
 		return encounter, currentTurn
 	}
 
 	damage, err := strconv.Atoi(args[2])
 	if err != nil {
-		fmt.Println("Error: Damage must be a number")
+		printError("Error: Damage must be a number")
 		return encounter, currentTurn
 	}
 
@@ -104,17 +112,17 @@ func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities, c
 	for i, entity := range encounter {
 		if strings.EqualFold(entity.Name, name) {
 			encounter[i].Health -= damage
-			fmt.Printf("%d damage dealt to %s, new health is %d\n", damage, name, encounter[i].Health)
+			coloredDamage := StyleHealth.Render(fmt.Sprintf("%d", damage))
+			coloredHealth := StyleHealth.Render(fmt.Sprintf("%d", encounter[i].Health))
+			fmt.Printf("%s damage dealt to %s, new health is %s\n", coloredDamage, StyleEntity.Render(name), coloredHealth)
 
 			if encounter[i].Health <= 0 {
-				fmt.Printf("%s health is equal to or below zero, would you like to remove them? (y/n) ", name)
+				fmt.Printf("%s health is equal to or below zero, would you like to remove them? (y/n) ", StyleEntity.Render(name))
 				if scanner.Scan() {
 					answer := cleanInput(scanner.Text())
-					fmt.Printf("\n")
-
 					if strings.EqualFold(answer, "y") || strings.EqualFold(answer, "yes") {
 						encounter = append(encounter[:i], encounter[i+1:]...)
-						fmt.Printf("removed %s\n", name)
+						fmt.Printf("removed %s\n", StyleEntity.Render(name))
 
 						if i < currentTurn {
 							currentTurn--
@@ -131,7 +139,7 @@ func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities, c
 		}
 	}
 
-	fmt.Println("No entity found with name: " + name)
+	fmt.Println("No entity found with name: " + StyleEntity.Render(name))
 	return encounter, currentTurn
 }
 
@@ -142,7 +150,9 @@ func listEntities(encounter []Entities) string {
 
 	var builder strings.Builder
 	for _, entity := range encounter {
-		line := fmt.Sprintf("Entity %s, %d health, %d initiative\n", entity.Name, entity.Health, entity.Initiative)
+		coloredHealth := StyleHealth.Render(fmt.Sprintf("%d", entity.Health))
+		coloredInitiative := StyleInitiative.Render(fmt.Sprintf("%d", entity.Initiative))
+		line := fmt.Sprintf("Entity %s, %s health, %s initiative\n", StyleEntity.Render(entity.Name), coloredHealth, coloredInitiative)
 		builder.WriteString(line)
 	}
 

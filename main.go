@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-var cliName string = "D&D"
+var cliName string = "Encounter-Manager"
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var encounter []Entities
 	gameStarted := false
 	currentTurn := 0
-	fmt.Println("D&D Encounter Tracker Started. Type 'exit' to quit")
+	fmt.Println("Tabletop Encounter Manager Started. Type 'exit' to quit")
 	printPrompt()
 
 	for scanner.Scan() {
