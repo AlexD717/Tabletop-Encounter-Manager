@@ -9,11 +9,22 @@ import (
 
 var cliName string = "Encounter-Manager"
 
+const encounterLogo = `                                                                                                     
+  ▄▄▄▄▄▄▄                                                 ▄▄▄     ▄▄▄                                     
+ █▀██▀▀▀                                █▄                 ███▄ ▄███                                      
+   ██     ▄                       ▄    ▄██▄      ▄         ██ ▀█▀ ██         ▄              ▄▄       ▄    
+   ████   ████▄ ▄███▀ ▄███▄ ██ ██ ████▄ ██ ▄█▀█▄ ████▄     ██     ██   ▄▀▀█▄ ████▄ ▄▀▀█▄ ▄████ ▄█▀█▄ ████▄
+   ██     ██ ██ ██    ██ ██ ██ ██ ██ ██ ██ ██▄█▀ ██        ██     ██   ▄█▀██ ██ ██ ▄█▀██ ██ ██ ██▄█▀ ██   
+   ▀█████▄██ ▀█▄▀███▄▄▀███▀▄▀██▀█▄██ ▀█▄██▄▀█▄▄▄▄█▀      ▀██▀     ▀██▄▄▀█▄██▄██ ▀█▄▀█▄██▄▀████▄▀█▄▄▄▄█▀   
+                                                                                            ██            
+                                                                                          ▀▀▀             `
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var encounter []Entities
 	gameStarted := false
 	currentTurn := 0
+	fmt.Println(StylePrompt.Render(encounterLogo))
 	fmt.Println("Tabletop Encounter Manager Started. Type 'exit' to quit")
 	printPrompt()
 
