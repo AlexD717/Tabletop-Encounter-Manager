@@ -35,6 +35,11 @@ func currentEntityTurn(encounter []Entities, currentTurn int) {
 }
 
 func nextTurn(encounter []Entities, currentTurn int) int {
+	if len(encounter) == 0 {
+		fmt.Printf("No entities in the encounter\n")
+		return currentTurn
+	}
+
 	currentTurn = (currentTurn + 1) % len(encounter)
 	currentEntityTurn(encounter, currentTurn)
 	return currentTurn
