@@ -36,7 +36,7 @@ func helpCommand() {
 	printCommand("exit", "", "Exits the CLI tool")
 	printCommand("list", "", "Lists all entities in the encounter")
 	printCommand("current", "", "Lists the entities whose turn it currently is")
-	printCommand("next", "", "Ends the current entities turn and says who the next entity is to go")
+	printCommand("next", "", "Ends the current entities turn and displays the next entity")
 	printCommand("add", "<name> <health> <initiative>", "Adds a new entity to the encounter")
 	printCommand("damage", "<name> <damage-amount>", "Damages the specified entity by the specified amount")
 }
