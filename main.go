@@ -47,6 +47,8 @@ func main() {
 			gameStarted = true
 		case "add":
 			encounter, currentTurn = addEntities(args, encounter, currentTurn, gameStarted)
+		case "remove":
+			encounter, currentTurn = removeEntityCommand(args, encounter, currentTurn)
 		case "damage":
 			encounter, currentTurn = damageEntity(args, scanner, encounter, currentTurn)
 		default:

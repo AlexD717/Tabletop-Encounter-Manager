@@ -14,6 +14,7 @@ A CLI tool for managing tabletop encounters, designed with D&D encounters in min
 | `current` | None | Lists the entities whose turn it currently is |
 | `next` | None | Ends the current entities turn and displays the next entity |
 | `add` | `<name> <health> <initiative>` | Adds a new entity to the encounter |
+| `remove`| `<name>` | Removes the specified entity from the encounter |
 | `damage` | `<name> <damage-amount>` | Damages the specified entity by the specified amount | 
 
 ## Installation

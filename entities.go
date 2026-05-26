@@ -101,6 +101,24 @@ func addEntities(args []string, encounter []Entities, currentTurn int, gameStart
 	return encounter, currentTurn
 }
 
+func removeEntityCommand(args []string, encounter []Entities, currentTurn int) ([]Entities, int) {
+	if len(args) != 2 {
+		printError("Invalid Number of Arguments, To use remove [entity]")
+		return encounter, currentTurn
+	}
+
+	name := args[1]
+
+	for i, entity := range encounter {
+		if strings.EqualFold(entity.Name, name) {
+			return removeEntityByIndex(i, encounter, currentTurn)
+		}
+	}
+
+	fmt.Printf("No entity found with name %s\n", StyleEntity.Render(name))
+	return encounter, currentTurn
+}
+
 func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities, currentTurn int) ([]Entities, int) {
 	if len(args) != 3 {
 		printError("Invalid Number of Arguments. To use damage [name] [amount]")
@@ -126,16 +144,17 @@ func damageEntity(args []string, scanner *bufio.Scanner, encounter []Entities, c
 				if scanner.Scan() {
 					answer := cleanInput(scanner.Text())
 					if strings.EqualFold(answer, "y") || strings.EqualFold(answer, "yes") {
-						encounter = append(encounter[:i], encounter[i+1:]...)
-						fmt.Printf("removed %s\n", StyleEntity.Render(name))
+						encounter, currentTurn = removeEntityByIndex(i, encounter, currentTurn)
+						// 	encounter = append(encounter[:i], encounter[i+1:]...)
+						// 	fmt.Printf("removed %s\n", StyleEntity.Render(name))
 
-						if i < currentTurn {
-							currentTurn--
-						} else if i == currentTurn {
-							if currentTurn >= len(encounter) {
-								currentTurn = 0
-							}
-						}
+						// 	if i < currentTurn {
+						// 		currentTurn--
+						// 	} else if i == currentTurn {
+						// 		if currentTurn >= len(encounter) {
+						// 			currentTurn = 0
+						// 		}
+						// 	}
 					}
 				}
 			}

@@ -193,6 +193,68 @@ func TestAddEntity(t *testing.T) {
 	}
 }
 
+func TestRemoveEntity(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name              string
+		encounter         []Entities
+		args              []string
+		currentTurn       int
+		expectedEncounter []Entities
+		expectedTurn      int
+	}{
+		{
+			"Simple Remove",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"remove", "goblin"},
+			1,
+			[]Entities{{Name: "troll", Health: 20, Initiative: 10}},
+			0,
+		},
+		{
+			"Entity not in Encounter",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"remove", "dragon"},
+			1,
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			1,
+		},
+		{
+			"Not Enough Arguments",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"remove"},
+			1,
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			1,
+		},
+		{
+			"Too Many Enough Arguments",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"remove", "goblin", "sure"},
+			0,
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 14}, {Name: "troll", Health: 20, Initiative: 10}},
+			0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			resultingEncounter, resultingTurn := removeEntityCommand(tt.args, tt.encounter, tt.currentTurn)
+
+			if !reflect.DeepEqual(resultingEncounter, tt.expectedEncounter) {
+				t.Errorf("Expected encounter to be %+v, got %+v", tt.expectedEncounter, resultingEncounter)
+			}
+
+			if resultingTurn != tt.expectedTurn {
+				t.Errorf("Expected current turn to be %d, got %d", tt.currentTurn, tt.expectedTurn)
+			}
+		})
+	}
+}
+
 func TestDamageEntity(t *testing.T) {
 	t.Parallel()
 
@@ -307,6 +369,7 @@ func TestDamageEntity(t *testing.T) {
 			if !reflect.DeepEqual(resultingEncounter, tt.expectedEncounter) {
 				t.Errorf("Expected encounter to be %+v, got %+v", tt.expectedEncounter, resultingEncounter)
 			}
+
 			if resultingTurn != tt.expectedTurn {
 				t.Errorf("Expected current turn to be %d, got %d", tt.currentTurn, tt.expectedTurn)
 			}
