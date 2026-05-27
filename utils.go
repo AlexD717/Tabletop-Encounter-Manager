@@ -40,6 +40,7 @@ func helpCommand() {
 	printCommand("add", "<name> <health> <initiative>", "Adds a new entity to the encounter")
 	printCommand("remove", "<name>", "Removes the specified entity from the encounter")
 	printCommand("damage", "<name> <damage-amount>", "Damages the specified entity by the specified amount")
+	printCommand("heal", "<name> <heal-amount>", "Heals the specified entity by the specified amount")
 }
 
 func cleanInput(input string) string {

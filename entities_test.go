@@ -377,6 +377,59 @@ func TestDamageEntity(t *testing.T) {
 	}
 }
 
+func TestHealEntity(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name              string
+		encounter         []Entities
+		args              []string
+		expectedEncounter []Entities
+	}{
+		{
+			"Simple Heal",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"heal", "goblin", "10"},
+			[]Entities{{Name: "goblin", Health: 20, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+		},
+		{
+			"Entity not in encounter",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"heal", "dragon", "10"},
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+		},
+		{
+			"Heal Amount Not a Number",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"heal", "goblin", "ten"},
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+		},
+		{
+			"Not Enough Arguments",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"heal", "goblin"},
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+		},
+		{
+			"Too Many Arguments",
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+			[]string{"heal", "goblin", "ten", "ten"},
+			[]Entities{{Name: "goblin", Health: 10, Initiative: 4}, {Name: "troll", Health: 20, Initiative: 10}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			resultingEncounter := healEntity(tt.args, tt.encounter)
+			if !reflect.DeepEqual(resultingEncounter, tt.expectedEncounter) {
+				t.Errorf("Expected encounter to be %+v, got %+v", tt.expectedEncounter, resultingEncounter)
+			}
+		})
+	}
+}
+
 func TestListEntities(t *testing.T) {
 	t.Parallel()
 

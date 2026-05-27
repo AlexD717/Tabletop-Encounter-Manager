@@ -24,6 +24,12 @@ func TestFullEncounter(t *testing.T) {
 		t.Errorf("Expected goblin to have 3 health, got %d", encounter[1].Health)
 	}
 
+	encounter = healEntity([]string{"heal", "goblin", "3"}, encounter)
+
+	if encounter[1].Health != 6 {
+		t.Errorf("Expected goblin to have 6 health, got %d", encounter[1].Health)
+	}
+
 	currentTurn = nextTurn(encounter, currentTurn)
 
 	if currentTurn != 1 {

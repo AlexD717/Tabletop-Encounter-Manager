@@ -16,6 +16,7 @@ A CLI tool for managing tabletop encounters, designed with D&D encounters in min
 | `add` | `<name> <health> <initiative>` | Adds a new entity to the encounter |
 | `remove`| `<name>` | Removes the specified entity from the encounter |
 | `damage` | `<name> <damage-amount>` | Damages the specified entity by the specified amount | 
+| `heal` | `<name> <heal-amount>` | Heals the specified entity by the specified amount |
 
 ## Installation
 

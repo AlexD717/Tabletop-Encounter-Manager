@@ -51,6 +51,8 @@ func main() {
 			encounter, currentTurn = removeEntityCommand(args, encounter, currentTurn)
 		case "damage":
 			encounter, currentTurn = damageEntity(args, scanner, encounter, currentTurn)
+		case "heal":
+			encounter = healEntity(args, encounter)
 		default:
 			invalidCommand()
 		}
